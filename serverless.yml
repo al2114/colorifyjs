@@ -13,13 +13,17 @@
 
 service: pesto-pallete
 
+
+frameworkVersion: ">=1.2.0 <2.0.0"
+
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
 provider:
   name: aws
-  runtime: python2.7
+  runtime: python3.6
+  timeout: 180
 
 # you can overwrite defaults here
 #  stage: dev
@@ -102,3 +106,14 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+
+
+package:
+  exclude:
+    - venv/** # virtualenv

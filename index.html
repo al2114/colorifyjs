@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Colorify.js</title>
+
+	<style>
+
+		body {
+			position: fixed;
+			width: 100vw;
+			height: 100vh;
+			margin: 0 0;
+			font-family: Helvetica;
+		}
+		form {
+			position: relative;
+			width: 100%;
+			height: 20%;
+		}
+
+		input {
+			width: 100%;
+			height: 100%;
+			border: none;
+			font-size: 50px;
+			text-align: center;
+			color: transparent;
+            text-shadow: 0 0 0 black;
+		}
+
+		*:focus {
+		    outline: none;
+		}
+       	::-webkit-input-placeholder {
+            text-align: center;
+            color: rgba(0,0,0,0.3);
+            text-shadow: 0 0 0 transparent;
+        }
+
+        :-moz-placeholder { /* Firefox 18- */
+            text-align: center;  
+            color: rgba(0,0,0,0.3);
+            text-shadow: 0 0 0 transparent;
+        }
+
+        ::-moz-placeholder {  /* Firefox 19+ */
+            text-align: center;  
+            color: rgba(0,0,0,0.3);
+            text-shadow: 0 0 0 transparent;
+        }
+
+        :-ms-input-placeholder {  
+            text-align: center; 
+            color: rgba(0,0,0,0.3);
+            text-shadow: 0 0 0 transparent;
+        }
+
+		#palette {
+			position: relative;
+			width: 100%;
+			height: 80%;
+			background: green;
+		}
+
+		.color-field {
+			position: relative;
+			height: 100%;
+			float:left;
+			padding-top: 40vh;
+			text-align: center;
+		}
+
+	</style>
+</head>
+<body>
+	<form id="form">
+        <input class="query" type="text" name="query" placeholder="Type a keyword" autocomplete="off"/>
+	</form>
+
+	<div id="palette">
+	hi
+	</div>
+	<script src="jquery-3.3.1.min.js"></script>	
+	<script src="jquery.serialize-object.min.js"></script>
+
+	<script type="text/javascript">
+
+		var url = 'https://yo1nnfx5m0.execute-api.us-east-1.amazonaws.com/dev/pesto-pallete-dev-hello?keyword=';
+
+		var mockResponse = {colors: ["DD6017", "000000", "4C4D3C", "B1C39D", "E8E8E8"], query: "pesto"};
+
+		function getColorHtml(idx, color, width) {
+			
+			var div;
+
+			var sum = parseInt(color.substr(0,2),16)+parseInt(color.substr(2,2),16)+parseInt(color.substr(4,2),16);
+			console.log([color, sum]);
+
+			if(sum>384){
+				console.log("balck txt")
+				div = "<div class='color-field' style='width: "+width+"; background: #"+color+"'><font>#"+color+"</font></div>\n";
+			}
+			else {
+								console.log("white txt")
+
+				div = "<div class='color-field' style='width: "+width+"; background: #"+color+"'><font color='white'>#"+color+"</font></div>\n";
+			}
+			// var div = "<div class='color-field'></div>"
+			return div;
+		}
+
+		$(document).ready(function() {
+	        $("#form").submit(function(e) {
+                e.preventDefault();
+                document.getElementById("form").reset();
+	            var query = $('#form').serializeArray()[0]['value'];
+
+	            // var data = mockResponse;
+
+				$.ajax({
+			        type: 'GET',
+			        url: url+query,
+			        success: function(data) {
+			            console.log(data);
+					            
+			            var colors = data['colors']
+
+			            var colorWidth = Math.floor(100/(colors.length))+'%'
+
+			            document.getElementById("palette").innerHTML = "";
+
+			            for(var i = 0; i<colors.length; i++){
+			            	document.getElementById("palette").innerHTML += getColorHtml(i,colors[i],colorWidth);
+			            }
+		            	$('.container').css('background',"#"+colors[colors.length-1]);
+
+			        }
+
+			    });
+
+			});
+		});
+	</script>
+
+
+</body>
+</html>

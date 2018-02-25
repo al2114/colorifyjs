@@ -6,14 +6,25 @@ import requests
 from io import BytesIO
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
-import json 
-
-
+import json
 
 def hello(event, context):
+    badResponse = {
+        "statusCode": 400,
+        "body": "Bad request, missing parameter 'keyword' in query string"
+    }
+    if not 'queryStringParameters' in event:
+        return badResponse
+
+    params = event['queryStringParameters']
+    if not 'keyword' in params:
+        return badReponse
+
+    keyword = event['queryStringParameters']['keyword']
+
     body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
+        "colors": get_colour_scheme(keyword),
+        "query": keyword
     }
 
     response = {
@@ -22,7 +33,6 @@ def hello(event, context):
     }
 
     return response
-
     # Use this code if you don't use the http event with the LAMBDA-PROXY
     # integration
     """
@@ -82,6 +92,8 @@ def get_colour_scheme(query):
     parsed = json.loads(response) 
     return parsed['info']['colors']
 
+if __name__ == "__main__":
+    hello('','')
 
 
 
