@@ -84,7 +84,8 @@
 
 	<script type="text/javascript">
 
-		var url = 'https://yo1nnfx5m0.execute-api.us-east-1.amazonaws.com/dev/pesto-pallete-dev-hello?keyword=';
+		var getImageUrl = 'https://f27dcxtwpb.execute-api.us-east-1.amazonaws.com/dev/pesto-pallete-dev-image_search?keyword=';
+		var getColorUrl= 'https://jctyinncaj.execute-api.us-east-1.amazonaws.com/dev/pesto-pallete-dev-colour_scheme?url=';
 
 		var mockResponse = {colors: ["DD6017", "000000", "4C4D3C", "B1C39D", "E8E8E8"], query: "pesto"};
 
@@ -96,48 +97,95 @@
 			console.log([color, sum]);
 
 			if(sum>384){
-				console.log("balck txt")
 				div = "<div class='color-field' style='width: "+width+"; background: #"+color+"'><font>#"+color+"</font></div>\n";
 			}
 			else {
-								console.log("white txt")
-
 				div = "<div class='color-field' style='width: "+width+"; background: #"+color+"'><font color='white'>#"+color+"</font></div>\n";
 			}
 			// var div = "<div class='color-field'></div>"
 			return div;
 		}
 
+        var queryResponseStore = {};
+
 		$(document).ready(function() {
 	        $("#form").submit(function(e) {
                 e.preventDefault();
 	            var query = $('#form').serializeArray()[0]['value'];
-	            var urlQuery = url+query;
-	            // var data = mockResponse;
 
-				$.ajax({
-			        type: 'GET',
-                    url: urlQuery,
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-			        success: function(data) {
-			            console.log(data);
-					            
-			            var colors = data['colors']
 
-			            var colorWidth = Math.floor(100/(colors.length))+'%'
+                if(query in queryResponseStore){
+                    var urls = queryResponseStore[query];
+                    var url = urls[Math.floor(Math.random()*urls.length)];
+                    var urlQuery = getColorUrl+url;
+                    $.ajax({
+                        type: 'GET',
+                        url: urlQuery,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        success: function(data) {
+                            console.log(data);
 
-			            document.getElementById("palette").innerHTML = "";
+                            var colors = data['colors']
 
-			            for(var i = 0; i<colors.length; i++){
-			            	document.getElementById("palette").innerHTML += getColorHtml(i,colors[i],colorWidth);
-			            }
-		            	$('.container').css('background',"#"+colors[colors.length-1]);
+                                var colorWidth = Math.floor(100/(colors.length))+'%'
 
-			        }
+                                document.getElementById("palette").innerHTML = "";
 
-			    });
+                            for(var i = 0; i<colors.length; i++){
+                                document.getElementById("palette").innerHTML += getColorHtml(i,colors[i],colorWidth);
+                            }
+                            $('.container').css('background',"#"+colors[colors.length-1]);
+                        } 
+                    });
+                }
+                else {
+ 
+                    var urlQuery = getImageUrl+query;
+                    // var data = mockResponse;
+
+                    $.ajax({
+                        type: 'GET',
+                        url: urlQuery,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        success: function(data) {
+
+                            var urls = data['urls'];
+                            var query = data['query'];
+                            console.log("Cahcing urls for " + query);
+                            queryResponseStore[query] = urls; 
+
+                            var url = urls[Math.floor(Math.random()*urls.length)];
+                            var urlQuery = getColorUrl+url;
+                            $.ajax({
+                                type: 'GET',
+                                url: urlQuery,
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                success: function(data) {
+                                    console.log(data);
+                                            
+                                    var colors = data['colors']
+
+                                    var colorWidth = Math.floor(100/(colors.length))+'%'
+
+                                    document.getElementById("palette").innerHTML = "";
+
+                                    for(var i = 0; i<colors.length; i++){
+                                        document.getElementById("palette").innerHTML += getColorHtml(i,colors[i],colorWidth);
+                                    }
+                                    $('.container').css('background',"#"+colors[colors.length-1]);
+                                } 
+                            });
+                       }
+                    });
+                   
+                
+                }
 
 			});
 		});
