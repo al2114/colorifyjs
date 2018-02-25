@@ -85,7 +85,7 @@
 
 	<script type="text/javascript">
 
-		var url = 'http://cors.io/?u=https://yo1nnfx5m0.execute-api.us-east-1.amazonaws.com/dev/pesto-pallete-dev-hello?keyword=';
+		var url = 'http://yo1nnfx5m0.execute-api.us-east-1.amazonaws.com/dev/pesto-pallete-dev-hello?keyword=';
 
 		var mockResponse = {colors: ["DD6017", "000000", "4C4D3C", "B1C39D", "E8E8E8"], query: "pesto"};
 
@@ -120,6 +120,7 @@
 				$.ajax({
 			        type: 'GET',
 			        url: url+query,
+		            crossDomain: true,
 			        success: function(data) {
 			            console.log(data);
 					            
