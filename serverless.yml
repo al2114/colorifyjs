@@ -59,8 +59,10 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  image_search:
+    handler: handler.image_finder_service
+  colour_scheme:
+    handler: handler.colour_scheme_service
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
