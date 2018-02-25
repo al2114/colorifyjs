@@ -121,9 +121,7 @@
                     $.ajax({
                         type: 'GET',
                         url: urlQuery,
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
+                        contentType: 'application/x-www-form-urlencoded',
                         success: function(data) {
                             console.log(data);
 
@@ -148,10 +146,9 @@
                     $.ajax({
                         type: 'GET',
                         url: urlQuery,
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
+                        contentType: 'application/x-www-form-urlencoded',
                         success: function(data) {
+
 
                             var urls = data['urls'];
                             var query = data['query'];
@@ -163,9 +160,7 @@
                             $.ajax({
                                 type: 'GET',
                                 url: urlQuery,
-                                headers: {
-                                    'Content-Type': 'application/x-www-form-urlencoded'
-                                },
+                                contentType: 'application/x-www-form-urlencoded',
                                 success: function(data) {
                                     console.log(data);
                                             
