@@ -118,9 +118,10 @@
 
 				$.ajax({
 			        type: 'GET',
-			        url: urlQuery,
-                    dataType: 'jsonp',
-		            crossDomain: true,
+                    url: urlQuery,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
 			        success: function(data) {
 			            console.log(data);
 					            
